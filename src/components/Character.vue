@@ -1,7 +1,5 @@
 <template>
   <div class="character-table">
-    <span>{{ character.name }}</span>
-    <br>
     <table>
       <thead>
         <tr>
@@ -18,11 +16,11 @@
         </tr>
       </thead>
       <tbody>
-        <note
+        <tr is="note"
           v-for="note in character.notes"
           :note="note"
           :index="$index">
-        </note>
+        </tr>
       </tbody>
     </table>
   </div>

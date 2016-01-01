@@ -6,6 +6,10 @@
     <input v-model="newNote.line">
     <input v-model="newNote.error">
     <button v-on:click="makeNote">Add Note</button>
+    <br>
+    <ul>
+      <li v-for="character in characters">{{character.name}}</li>
+    </ul>
     <character
       v-for="character in characters"
       :character="character"
