@@ -65,7 +65,9 @@ export default {
         line: this.newNote.line,
         error: this.newNote.error
       }
-      this.notes.push(note)
+      let key = store.pushNote(note)
+      console.log(key)
+      this.notes.push(key)
       this.newNote = {}
     }
 
@@ -74,7 +76,7 @@ export default {
   route: {
     data ({ to }) {
       return store.fetchNotes(to.params.name, to.params.char)
-                  .then(notes => ({notes}))
+                  .then(notes => ({notes}), notes => ([]))
     }
   }
 }
