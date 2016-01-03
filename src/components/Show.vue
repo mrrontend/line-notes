@@ -9,16 +9,15 @@
     <br>
     <ul class="tabs" data-tabs id="character-tabs">
       <li class="tabs-title" v-for="character in show.characters">
-        <a href="character-{{$index}}"
-           v-on:click="setActiveChar" character.name>{{character.name}}</a>
+        <a v-link="{name: 'char', params: {name: $route.params.name, char: character.name}}">
+          {{character.name}}
+        </a>
       </li>
       <li class="tabs-title" v-on:click="addChar">+</li>
     </ul>
-    <character
-      v-for="character in show.characters"
-      :character="character"
-      :index="$index">
-    </character>
+    <!--<character v-model="activeChar">
+    </character>-->
+    <router-view></router-view>
     <button v-on:click="getShow">Get Show</button>
   </div>
 </template>
@@ -35,8 +34,8 @@ export default {
 
   data () {
     return {
-      activeChar: null,
       show: store.fetchShow('Urinetown').then(show => show),
+      activeChar: null,
       newNote: Object
     }
   },
