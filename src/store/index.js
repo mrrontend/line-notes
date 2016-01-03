@@ -2,30 +2,40 @@ import Firebase from 'firebase'
 import { EventEmitter } from 'events'
 import { Promise } from 'es6-promise'
 
-const api = new Firebase('https://brilliant-inferno-5092.firebaseio.com/characters/');
-const store = new EventEmitter();
+const api = new Firebase('https://brilliant-inferno-5092.firebaseio.com/')
+const store = new EventEmitter()
+const cache = Object.create(null)
 
 export default store
 
 /**
- * Fetch a character with its notes, by id
+ * Fetch a show by its name
  *
  */
-store.fetchCharacter = id => {
-  
+store.fetchShow = name => {
+  return new Promise((resolve, reject) => {  
+    api.child('shows/' + name).once('value', snapshot => {
+      resolve(snapshot.val())
+    }, reject)   
+  })
 }
 
 /**
  * Insert a new character
  *
  */
-store.postCharacter = char => {
-  api.push(char);
+store.pushCharacter = char => {
+  api.push(char)
 }
 
 /**
  * Insert a note for a character
  */
-store.postNote = (char, note) => {
-  api.child(char).push(note);
+store.pushNote = (char, note) => {
+  api.once('value', function (snapshot) {
+    if (!snapshot.child(char).exists()) {
+      store.pushCharacter(char)
+    }
+    api.child(char).push(note)
+  })
 }

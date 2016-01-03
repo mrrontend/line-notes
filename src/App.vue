@@ -17,12 +17,14 @@
       :character="character"
       :index="$index">
     </character>
+    <button v-on:click="getShow">Get Show</button>
   </div>
 </template>
 
 <script>
 import Character from './components/Character'
 import Note from './components/Note'
+import store from './store'
 
 export default {
   components: {
@@ -47,7 +49,14 @@ export default {
         error: this.newNote.error
       }
       this.characters[0].notes.push(note)
+      store.pushCharacter(this.characters[0])
       this.newNote = Note
+    },
+
+    getShow: function () {
+      store.fetchShow('Urinetown').then(show => {
+        console.log(show)
+      })
     }
   }
 }
