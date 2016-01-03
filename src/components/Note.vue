@@ -3,8 +3,9 @@
     <td>{{ note.act }}</td>
     <td>{{ note.scene }}</td>
     <td>{{ note.page }}</td>
-    <td>{{ note.line }}</td>
+    <td class="line">{{ note.line }}</td>
     <td>{{ note.error }}</td>
+    <td><button v-on:click="deleteNote"> X </button></td>
   </tr>
 </template>
 
@@ -13,7 +14,7 @@ export default {
   name: 'Note',
 
   props: {
-    note: Object
+    note: {}
   },
 
   data () {
@@ -24,6 +25,18 @@ export default {
       // line: '',
       // error: 0
     }
+  },
+
+  methods: {
+    deleteNote: function () {
+
+    }
   }
 }
 </script>
+
+<style>
+td.line {
+  width: 50%
+}
+</style>
