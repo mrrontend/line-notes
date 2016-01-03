@@ -9,6 +9,21 @@ const cache = Object.create(null)
 export default store
 
 /**
+ * Fetch all shows
+ *
+ */
+store.fetchShows = () => {
+  var names = []
+  api.child('shows').once('value', snapshot => {
+    snapshot.forEach((child) => {
+      names.push(child.key())
+    })
+    return names
+  })
+  return names
+}
+
+/**
  * Fetch a show by its name
  *
  */
