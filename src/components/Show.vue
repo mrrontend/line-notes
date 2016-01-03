@@ -18,7 +18,6 @@
     <!--<character v-model="activeChar">
     </character>-->
     <router-view></router-view>
-    <button v-on:click="getShow">Get Show</button>
   </div>
 </template>
 
@@ -28,15 +27,26 @@ import Note from './Note'
 import store from '../store'
 
 export default {
+  name: 'Show',
+
   components: {
     Character
   },
 
   data () {
     return {
-      show: store.fetchShow('Urinetown').then(show => show),
-      activeChar: null,
-      newNote: Object
+      show: {},
+      newNote: {}
+    }
+  },
+
+  route: {
+    // http://router.vuejs.org/en/pipeline/data.html#promise-sugar
+    data ({ to }) {
+      return store.fetchShow(to.params.name).then(show => ({
+        newNote: {},
+        show
+      }))
     }
   },
 
@@ -52,13 +62,6 @@ export default {
       this.characters[0].notes.push(note)
       store.pushCharacter(this.characters[0])
       this.newNote = Note
-    },
-
-    getShow: function () {
-      store.fetchShow('Urinetown').then(show => {
-        console.log(show)
-        this.show = show
-      })
     },
 
     addChar: function () {
