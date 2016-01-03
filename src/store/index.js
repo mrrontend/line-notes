@@ -13,10 +13,15 @@ export default store
  *
  */
 store.fetchShow = name => {
-  return new Promise((resolve, reject) => {  
-    api.child('shows/' + name).once('value', snapshot => {
-      resolve(snapshot.val())
-    }, reject)   
+  return new Promise((resolve, reject) => {
+    if (cache[name]) {
+      resolve(cache[name])
+    } else {
+      api.child('shows/' + name).once('value', snapshot => {
+        const show = cache[name] = snapshot.val()
+        resolve(show)
+      }, reject)
+    }
   })
 }
 
@@ -24,18 +29,22 @@ store.fetchShow = name => {
  * Insert a new character
  *
  */
-store.pushCharacter = char => {
-  api.push(char)
+store.pushCharacter = (show, char) => {
+  api.child(getShowCharacter(show, char)).push(char)
 }
 
 /**
  * Insert a note for a character
  */
-store.pushNote = (char, note) => {
+store.pushNote = (show, char, note) => {
   api.once('value', function (snapshot) {
-    if (!snapshot.child(char).exists()) {
+    if (!snapshot.child(getShowCharacter(show, char)).exists()) {
       store.pushCharacter(char)
     }
-    api.child(char).push(note)
+    api.child(getShowCharacter(show, char)).push(note)
   })
+}
+
+const getShowCharacter = (show, char) => {
+  return 'shows/' + show + '/' + char
 }

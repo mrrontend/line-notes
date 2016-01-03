@@ -8,12 +8,13 @@
     <button v-on:click="makeNote">Add Note</button>
     <br>
     <ul class="tabs" data-tabs id="character-tabs">
-      <li class="tabs-title" v-for="character in characters">
+      <li class="tabs-title" v-for="character in show.characters">
         <a href="character-{{$index}}">{{character.name}}</a>
       </li>
+      <li class="tabs-title" v-on:click="addChar">+</li>
     </ul>
     <character
-      v-for="character in characters"
+      v-for="character in show.characters"
       :character="character"
       :index="$index">
     </character>
@@ -33,10 +34,8 @@ export default {
 
   data () {
     return {
-      characters: [
-        { name: 'Bob', notes: [] }
-      ],
-      newNote: Note
+      show: store.fetchShow('Urinetown').then(show => show),
+      newNote: Object
     }
   },
   methods: {
@@ -56,7 +55,12 @@ export default {
     getShow: function () {
       store.fetchShow('Urinetown').then(show => {
         console.log(show)
+        this.show = show
       })
+    },
+
+    addChar: function () {
+      store.pushCharacter(this.show.name, 'Test')
     }
   }
 }
