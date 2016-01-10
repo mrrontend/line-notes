@@ -51,6 +51,8 @@ export default {
 
   data () {
     return {
+      show: '',
+      char: '',
       newNote: {},
       notes: {}
     }
@@ -65,9 +67,8 @@ export default {
         line: this.newNote.line,
         error: this.newNote.error
       }
-      let key = store.pushNote(note)
-      console.log(key)
-      this.notes.push(key)
+      let key = store.pushNote(this.show, this.char, note)
+      this.notes[key] = 'true'
       this.newNote = {}
     }
 
@@ -75,8 +76,18 @@ export default {
 
   route: {
     data ({ to }) {
-      return store.fetchNotes(to.params.name, to.params.char)
-                  .then(notes => ({notes}), notes => ([]))
+      console.log('new name: ' + to.params.name)
+      console.log('new char: ' + to.params.char)
+      console.log('switching character')
+      let storeNotes = store.fetchNotes(to.params.name, to.params.char)
+                  .then((notes => notes), {})
+      console.log('new notes: ' + JSON.stringify(storeNotes))
+      return {
+        show: to.params.name,
+        char: to.params.char,
+        notes: storeNotes,
+        newNote: {}
+      }
     }
   }
 }

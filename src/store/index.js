@@ -62,11 +62,19 @@ store.fetchFirstChar = (show) => {
  */
 store.fetchNotes = (show, char) => {
   return new Promise((resolve, reject) => {
-    if (cache[show].characters[char] === 'butts') {
+    if (cache[show].characters[char].notes === 'butts') {
+      console.log('umm')
       resolve(cache[show].characters[char].notes)
     } else {
       api.child(getShowCharacter(show, char)).once('value', snapshot => {
-        // TODO: fix notes new json format
+        const char = cache[show].characters[char] = snapshot.val()
+        if (char.notes) {
+          console.log('new notes~: ' + JSON.stringify(char.notes))
+          resolve(char.notes)
+        } else {
+          console.log('rejecting')
+          reject
+        }
       }, reject)
     }
   })
@@ -87,13 +95,16 @@ store.pushCharacter = (show, char) => {
 /**
  * Insert a note for a character
  */
-store.pushNote = note => {
+store.pushNote = (show, char, note) => {
   let notesRef = api.child('notes/')
+  console.log(getShowCharacter(show, char))
+  let charRef = api.child(getShowCharacter(show, char) + 'notes/')
   let newNotesRef = notesRef.push()
   newNotesRef.set(note)
+  charRef.child(newNotesRef.key()).set('true')
   return newNotesRef.key()
 }
 
 const getShowCharacter = (show, char) => {
-  return 'shows/' + show + '/characters/' + char
+  return 'shows/' + show + '/characters/' + char + '/'
 }
