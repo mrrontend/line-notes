@@ -76,12 +76,8 @@ export default {
 
   route: {
     data ({ to }) {
-      console.log('new name: ' + to.params.name)
-      console.log('new char: ' + to.params.char)
-      console.log('switching character')
       let storeNotes = store.fetchNotes(to.params.name, to.params.char)
                   .then((notes => notes), {})
-      console.log('new notes: ' + JSON.stringify(storeNotes))
       return {
         show: to.params.name,
         char: to.params.char,

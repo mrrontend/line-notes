@@ -69,11 +69,9 @@ store.fetchNotes = (show, char) => {
       api.child(getShowCharacter(show, char)).once('value', snapshot => {
         const char = cache[show].characters[char] = snapshot.val()
         if (char.notes) {
-          console.log('new notes~: ' + JSON.stringify(char.notes))
           resolve(char.notes)
         } else {
-          console.log('rejecting')
-          reject
+          resolve({})
         }
       }, reject)
     }
