@@ -63,18 +63,36 @@ store.fetchFirstChar = (show) => {
 store.fetchNotes = (show, char) => {
   return new Promise((resolve, reject) => {
     if (cache[show].characters[char].notes === 'butts') {
-      console.log('umm')
       resolve(cache[show].characters[char].notes)
     } else {
       api.child(getShowCharacter(show, char)).once('value', snapshot => {
         const char = cache[show].characters[char] = snapshot.val()
         if (char.notes) {
-          resolve(char.notes)
+          let notes = []
+          for (let note in char.notes) {
+            console.log(note)
+            store.fetchNote(note).then((n) => {
+              notes.push(n)
+            })
+          }
+          resolve(notes)
         } else {
           resolve({})
         }
       }, reject)
     }
+  })
+}
+
+/**
+ * Fetch a single note
+ */
+store.fetchNote = id => {
+  return new Promise((resolve, reject) => {
+    api.child('notes/' + id).once('value', snapshot => {
+      console.log(snapshot.val())
+      resolve(snapshot.val())
+    }, reject)
   })
 }
 

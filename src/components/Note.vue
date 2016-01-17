@@ -18,13 +18,6 @@ export default {
   },
 
   data () {
-    return {
-      // act: 0,
-      // scene: 0,
-      // page: 0,
-      // line: '',
-      // error: 0
-    }
   },
 
   methods: {
